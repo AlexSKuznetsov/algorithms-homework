@@ -1,26 +1,34 @@
-import { Either, fromPromise, ap, right, getOrElse, flatten } from './fp/either';
+import {
+  Either,
+  fromPromise,
+  ap,
+  right,
+  getOrElse,
+  flatten,
+} from './fp/either';
 import { pipe } from './fp/utils';
 import { fetchClient, fetchExecutor } from './fetching';
 import { ClientUser, ExecutorUser } from './types';
 
-type Response<R> = Promise<Either<string, R>>
+type Response<R> = Promise<Either<string, R>>;
 
 const getExecutor = (): Response<ExecutorUser> => fromPromise(fetchExecutor());
-const getClients = (): Response<Array<ClientUser>> => fromPromise(fetchClient());
+const getClients = (): Response<Array<ClientUser>> =>
+  fromPromise(fetchClient());
 
 export enum SortBy {
   distance = 'distance',
   reward = 'reward',
 }
 
-export const show = (sortBy: SortBy) => (clients: Array<ClientUser>) => (executor: ExecutorUser): Either<string, string> => {
+export const show =
+  (sortBy: SortBy) =>
+  (clients: Array<ClientUser>) =>
+  (executor: ExecutorUser): Either<string, string> => {};
 
-};
-
-export const main = (sortBy: SortBy): Promise<string> => (
-  Promise
-    .all([getClients(), getExecutor()]) // Fetch clients and executor
-    .then(([clients, executor]) => (
+export const main = (sortBy: SortBy): Promise<string> =>
+  Promise.all([getClients(), getExecutor()]) // Fetch clients and executor
+    .then(([clients, executor]) =>
       pipe(
         /**
          * Since the "show" function takes two parameters, the value of which is inside Either
@@ -33,5 +41,4 @@ export const main = (sortBy: SortBy): Promise<string> => (
         flatten, // show at the end returns Either as well, so the result would be Either<string, Either<string, string>>. We need to flatten the result
         getOrElse((err) => err) // In case of any left (error) value, it would be stopped and show error. So, if clients or executor is left, the show would not be called, but onLeft in getOrElse would be called
       )
-    ))
-);
+    );

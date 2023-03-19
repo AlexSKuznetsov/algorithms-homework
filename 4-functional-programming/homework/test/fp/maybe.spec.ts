@@ -1,7 +1,13 @@
-import { fold, fromNullable, getOrElse, none, Some, some } from '../../src/fp/maybe';
+import {
+  fold,
+  fromNullable,
+  getOrElse,
+  none,
+  Some,
+  some,
+} from '../../src/fp/maybe';
 
 describe('Maybe algebraic type', () => {
-
   describe('fromNullable', () => {
     it('returns some of A if value is not null', () => {
       expect(fromNullable(10)).toStrictEqual(some(10));
@@ -29,11 +35,12 @@ describe('Maybe algebraic type', () => {
     type Guest = {
       name: string;
       from: string;
-    }
+    };
 
     const greet = fold<Guest, string>(
       () => 'Guest is not here :(',
-      (guest) => `Greeting in our town, ${guest.name}! How the weather in ${guest.from}`
+      (guest) =>
+        `Greeting in our town, ${guest.name}! How the weather in ${guest.from}`
     );
 
     it('returns the result of onSome in case of some', () => {
@@ -41,7 +48,9 @@ describe('Maybe algebraic type', () => {
         name: 'Gregor',
         from: 'New York',
       });
-      expect(greet(guest)).toBe('Greeting in our town, Gregor! How the weather in New York');
+      expect(greet(guest)).toBe(
+        'Greeting in our town, Gregor! How the weather in New York'
+      );
     });
 
     it('returns the result of onNone in case of none', () => {
